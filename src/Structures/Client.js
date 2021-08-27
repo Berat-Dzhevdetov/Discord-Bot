@@ -4,6 +4,8 @@ const Command = require("./Command.js");
 
 const Event = require("./Event.js");
 
+const config = require("../Data/config.json");
+
 const fs = require("fs");
 
 const intents = new Discord.Intents(32767);
@@ -16,6 +18,8 @@ class Client extends Discord.Client {
          * @type {Discord.Collection<string, Command>}
          */
         this.commands = new Discord.Collection();
+
+        this.prefix = config.prefix;
     }
 
     /**
@@ -24,7 +28,7 @@ class Client extends Discord.Client {
      */
     start(token) {
 
-        fs.readdirSync('../src/Commands')
+        fs.readdirSync(`./src/Commands`)
             .filter(file => file.endsWith(".js"))
             .forEach(file => {
                 /**
@@ -35,7 +39,7 @@ class Client extends Discord.Client {
                 this.commands.set(command.name, command);
             });
 
-        fs.readdirSync('../src/Events')
+        fs.readdirSync(`./src/Events`)
             .filter(file => file.endsWith(".js"))
             .forEach(file => {
                 /**
@@ -46,7 +50,7 @@ class Client extends Discord.Client {
                 this.on(event.event, event.run.bind(null, this));
             });
 
-        client.login(token);
+        this.login(token);
     }
 }
 
