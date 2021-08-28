@@ -4,4 +4,4 @@ const config = require('./Data/config.json');
 
 const client = new Client();
 
-client.start(config.token)
+client.start(config.token);

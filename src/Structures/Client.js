@@ -11,6 +11,9 @@ const fs = require("fs");
 const intents = new Discord.Intents(32767);
 
 class Client extends Discord.Client {
+
+    commands;
+
     constructor() {
         super({ intents })
 
@@ -36,6 +39,8 @@ class Client extends Discord.Client {
                  */
                 const command = require(`../Commands/${file}`);
 
+                console.log(`Command '${command.name}' loaded`);
+
                 this.commands.set(command.name, command);
             });
 
@@ -46,6 +51,8 @@ class Client extends Discord.Client {
                  * @type {Event}
                  */
                 const event = require(`../Events/${file}`);
+                
+                console.log(`Event '${event.event}' loaded`);
 
                 this.on(event.event, event.run.bind(null, this));
             });
