@@ -12,8 +12,6 @@ const intents = new Discord.Intents(32767);
 
 class Client extends Discord.Client {
 
-    commands;
-
     constructor() {
         super({ intents })
 
@@ -51,13 +49,23 @@ class Client extends Discord.Client {
                  * @type {Event}
                  */
                 const event = require(`../Events/${file}`);
-                
+
                 console.log(`Event '${event.event}' loaded`);
 
                 this.on(event.event, event.run.bind(null, this));
             });
 
         this.login(token);
+    }
+
+    async changePrefix(newPrefix) {
+        let text = fs.readFileSync(`${__dirname}/../Data/config.json`);
+
+        const data = JSON.parse(text);
+
+        data.prefix = newPrefix;
+
+        fs.writeFileSync('./src/Data/config.json', JSON.stringify(data, null, 2));
     }
 }
 
