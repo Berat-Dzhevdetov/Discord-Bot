@@ -21,6 +21,8 @@ class Client extends Discord.Client {
         this.commands = new Discord.Collection();
 
         this.prefix = config.prefix;
+
+        this.queue = new Map();
     }
 
     /**

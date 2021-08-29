@@ -7,7 +7,7 @@ module.exports = new Command({
     
     async run(message, _, client){
         
-        message.reply(`Ping: ${client.ws.ping} ms.`);
+        message.reply(`Ping: **${client.ws.ping}** ms.`);
 
     }
 })

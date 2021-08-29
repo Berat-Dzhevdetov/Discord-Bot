@@ -1,21 +1,19 @@
 const Command = require("../Structures/Command");
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
-const { joinVoiceChannel } = require('@discordjs/voice');
-
-const queue = new Map();
+const play = require('../Common/play');
 
 module.exports = new Command({
     name: "play",
     description: "Plays music from youtube if found.",
     permission: "CONNECT,SPEAK",
-    async run(message, args, _) {
+    async run(message, args, client) {
         const voiceChannel = message.member.voice.channel;
 
         if (!voiceChannel)
             return await message.channel.send('You need to be in a channel to execute this command!')
 
-        const serverQueue = queue.get(message.guild.id);
+        const serverQueue = client.queue.get(message.guild.id);
 
         if (!args[1] || args[1].length <= 0)
             return await message.channel.send('Invalid search argument.');
@@ -49,7 +47,7 @@ module.exports = new Command({
                 connection: null,
                 songs: []
             }
-            queue.set(message.guild.id, queueConstructor);
+            client.queue.set(message.guild.id, queueConstructor);
 
             queueConstructor.songs.push(song);
 
@@ -57,9 +55,9 @@ module.exports = new Command({
                 let connection = await voiceChannel.join();
                 queueConstructor.connection = connection;
 
-                await play(message.guild, queueConstructor.songs[0], message);
+                await play(message.guild, queueConstructor.songs[0], message, client);
             } catch (error) {
-                queue.delete(message.guild.id);
+                client.queue.delete(message.guild.id);
                 await message.channel.send(`There was a problem while trying to connect to the voice channel.`);
                 console.log(error);
             }
@@ -69,27 +67,3 @@ module.exports = new Command({
         }
     }
 })
-
-async function play(guild, song, message) {
-    const songQueue = queue.get(guild.id);
-
-    let eventForLeavingAfterTime;
-
-    if (!song) {
-        eventForLeavingAfterTime = setTimeout(() => {
-            songQueue.voiceChannel.leave();
-            queue.delete(guild.id);
-        }, 10 * 1000 * 60);
-        return;
-    }
-
-    const stream = ytdl(song.url, { filter: 'audioonly' });
-
-    songQueue.connection.play(stream, { seek: 0 })
-        .on('finish', async () => {
-            songQueue.songs.shift();
-            await play(guild, songQueue.songs[0], message)
-        });
-
-    return await message.channel.send(`🎵 Now playing **${song.title}**. Requested from **${message.author.username}**`);
-}
