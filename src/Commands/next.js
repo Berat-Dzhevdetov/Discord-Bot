@@ -11,16 +11,20 @@ module.exports = new Command({
             return message.channel.send("You need to be connected to channel.");
 
         const guild = message.guild;
-        
+
         let serverQueue = client.queue.get(guild.id);
 
         if (!serverQueue)
             return message.channel.send("There is nothing to skip!");
 
         serverQueue.songs.shift();
-        if(serverQueue.songs.length == 0) {
+
+        if (serverQueue.songs.length < 0)
+            return message.channel.send("There is nothing to skip!");
+
+        if (serverQueue.songs.length == 0)
             stopCurrentSong(serverQueue);
-        }
+
         await play(guild, serverQueue.songs[0], message, client);
     }
 })

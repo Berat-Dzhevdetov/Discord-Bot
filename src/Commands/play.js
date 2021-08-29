@@ -40,7 +40,7 @@ module.exports = new Command({
                 await message.channel.send(`There were no search results for '${videoQuery}'`);
         }
 
-        if (!serverQueue) {
+        if (!serverQueue || !serverQueue.connection.dispatcher) {
             const queueConstructor = {
                 voiceChannel: voiceChannel,
                 textChannel: message.channel,
