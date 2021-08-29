@@ -10,7 +10,7 @@ module.exports = new Command({
         let index = 1;
 
         client.commands.filter(c => c.name != "help").forEach(command => {
-            msgToSend += `${index}. ${command.name}\n   ${command.description}\n`;
+            msgToSend += `${index}. ${client.prefix}${command.name}\n   ${command.description}\n`;
             index++;
         });
 

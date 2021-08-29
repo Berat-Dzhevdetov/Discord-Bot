@@ -15,12 +15,20 @@ module.exports = new Command({
 
         if (parsedAmmont > 100) return message.reply(`You cannot clear more than 100 messages at once.`);
 
-        message.channel.bulkDelete(parsedAmmont);
+        try {
+            message.channel.bulkDelete(parsedAmmont);
+            const msg = await message.channel.send(`Cleared ${parsedAmmont} messages.`);
 
-        const msg = await message.channel.send(`Cleared ${parsedAmmont} messages.`);
+            setTimeout(() => {
+                msg.delete();
+            }, 5000);
 
-        setTimeout(() => {
-            msg.delete();
-        }, 5000);
+        } catch (error) {
+
+            const msg = await message.channel.send(`I can delete only messages that are under 14 days old.`);
+            setTimeout(() => {
+                msg.delete();
+            }, 5000);
+        }
     }
 })
