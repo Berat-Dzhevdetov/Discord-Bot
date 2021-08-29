@@ -20,9 +20,7 @@ module.exports = new Command({
         if (!args[1] || args[1].length <= 0)
             return await message.channel.send('Invalid search argument.');
 
-        let requestedFrom = message.member.user.tag;
-
-        let song = { requestedFrom };
+        let song = {};
 
         if (ytdl.validateURL(args[1])) {
             const songInfo = await ytdl.getInfo(args[1]);
@@ -67,7 +65,7 @@ module.exports = new Command({
             }
         } else {
             serverQueue.songs.push(song);
-            return await message.channel.send(`🎵 **${song.title}** was added to the queue.`);
+            return await message.channel.send(`🎵 **${song.title}** was added to the queue from **${message.author.username}**.`);
         }
     }
 })
@@ -82,15 +80,16 @@ async function play(guild, song, message) {
             songQueue.voiceChannel.leave();
             queue.delete(guild.id);
         }, 10 * 1000 * 60);
+        return;
     }
 
     const stream = ytdl(song.url, { filter: 'audioonly' });
 
     songQueue.connection.play(stream, { seek: 0 })
         .on('finish', async () => {
-            songQueue.song.shift();
-            await play(guild, songQueue.songs[0],message)
+            songQueue.songs.shift();
+            await play(guild, songQueue.songs[0], message)
         });
 
-    return await message.channel.send(`🎵 Now playing **${song.title}**. Requested from **${song.requestedFrom}**`);
+    return await message.channel.send(`🎵 Now playing **${song.title}**. Requested from **${message.author.username}**`);
 }
