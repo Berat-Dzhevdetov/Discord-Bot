@@ -1,9 +1,9 @@
 const Command = require("../Structures/Command");
-const { play, stopCurrentSong } = require('../Common/commands');
+const { clear, stopCurrentSong } = require("../Common/commands");
 
 module.exports = new Command({
-    name: "next",
-    description: "If there is a song currenly playing it will skip it. If there is next song it will be automatically played.",
+    name: "clear",
+    description: "Clears the bot queue.",
     permission: "CONNECT,SPEAK",
 
     async run(message, _, client) {
@@ -11,16 +11,16 @@ module.exports = new Command({
             return message.channel.send("You need to be connected to channel.");
 
         const guild = message.guild;
-        
+
         let serverQueue = client.queue.get(guild.id);
 
         if (!serverQueue)
             return message.channel.send("There is nothing to skip!");
 
-        serverQueue.songs.shift();
-        if(serverQueue.songs.length == 0) {
-            stopCurrentSong(serverQueue);
-        }
-        await play(guild, serverQueue.songs[0], message, client);
+        clear(serverQueue);
+
+        stopCurrentSong(serverQueue);
+        
+        return message.channel.send("The queue was cleaned.");
     }
 })

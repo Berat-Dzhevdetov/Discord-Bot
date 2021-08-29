@@ -1,7 +1,7 @@
 const Command = require("../Structures/Command");
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
-const play = require('../Common/play');
+const { play } = require('../Common/commands');
 
 module.exports = new Command({
     name: "play",
