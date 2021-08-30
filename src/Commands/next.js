@@ -14,17 +14,11 @@ module.exports = new Command({
 
         let serverQueue = client.queue.get(guild.id);
 
-        if (!serverQueue)
+        if (!serverQueue || !serverQueue.connection.dispatcher)
             return message.channel.send("There is nothing to skip!");
 
-        serverQueue.songs.shift();
+        serverQueue.connection.dispatcher.end();
 
-        if (serverQueue.songs.length < 0)
-            return message.channel.send("There is nothing to skip!");
-
-        if (serverQueue.songs.length == 0)
-            stopCurrentSong(serverQueue);
-
-        await play.run(guild, serverQueue.songs[0], message, client);
+        return message.channel.send(":fast_forward: Skipped the song for you!");
     }
 })

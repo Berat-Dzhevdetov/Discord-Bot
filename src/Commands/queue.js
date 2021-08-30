@@ -18,7 +18,11 @@ module.exports = new Command({
 
         let queueAsText = "";
 
-        for (let i = 0; i < serverQueue.songs.length; i++) {
+        const time = serverQueue.connection.dispatcher.streamTime;
+
+        queueAsText += `1. Now playing - **${serverQueue.songs[0].title}**\n`;
+
+        for (let i = 1; i < serverQueue.songs.length; i++) {
             const song = serverQueue.songs[i];
             queueAsText += `${i + 1}. ${song.title}\n`;
         }

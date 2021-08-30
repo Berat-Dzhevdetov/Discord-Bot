@@ -4,7 +4,7 @@ const clear = require("./clear");
 module.exports = new Command({
     name: "leave",
     description: "Disconnect the bot from the channel.",
-    permission: "ADMINISTRATOR",
+    permission: "SEND_MESSAGES",
 
     async run(message, _, client) {
         const voiceChannel = message.member.voice.channel;
