@@ -1,5 +1,5 @@
 const Command = require("../Structures/Command");
-const { play, stopCurrentSong } = require('../Common/commands');
+const play = require('./play');
 
 module.exports = new Command({
     name: "next",
@@ -25,6 +25,6 @@ module.exports = new Command({
         if (serverQueue.songs.length == 0)
             stopCurrentSong(serverQueue);
 
-        await play(guild, serverQueue.songs[0], message, client);
+        await play.run(guild, serverQueue.songs[0], message, client);
     }
 })

@@ -1,5 +1,4 @@
 const Command = require("../Structures/Command");
-const { clear, stopCurrentSong } = require("../Common/commands");
 
 module.exports = new Command({
     name: "clear",
@@ -17,10 +16,9 @@ module.exports = new Command({
         if (!serverQueue)
             return message.channel.send("There is nothing to skip!");
 
-        clear(serverQueue);
+        if(serverQueue.connection.dispatcher)
+            serverQueue.connection.dispatcher.destroy();
 
-        stopCurrentSong(serverQueue);
-        
         return message.channel.send("The queue was cleaned.");
     }
 })
