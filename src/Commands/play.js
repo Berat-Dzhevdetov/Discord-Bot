@@ -10,7 +10,7 @@ module.exports = new Command({
         const voiceChannel = message.member.voice.channel;
 
         if (!voiceChannel)
-            return await message.channel.send('You need to be in a channel to execute this command!')
+            return await message.channel.send('You need to be in a channel to execute this command!');
 
         const serverQueue = client.queue.get(message.guild.id);
 
@@ -75,7 +75,7 @@ const play = async(guild, song, message, client) => {
     if (!song) {
         eventForLeavingAfterTime = setTimeout(() => {
             songQueue.voiceChannel.leave();
-            queue.delete(guild.id);
+            songQueue.delete(guild.id);
         }, 10 * 1000 * 60);
         return;
     }
