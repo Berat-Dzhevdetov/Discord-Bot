@@ -8,17 +8,20 @@ module.exports = new Command({
 
     async run(message, _, client) {
         if (!message.member.voice.channel)
-            return message.channel.send("You need to be connected to channel.");
+            return await message.channel.send("You need to be connected to channel.");
 
         const guild = message.guild;
 
         let serverQueue = client.queue.get(guild.id);
 
         if (!serverQueue || !serverQueue.connection.dispatcher)
-            return message.channel.send("There is nothing to skip!");
+            return await message.channel.send("There is nothing to skip!");
 
         serverQueue.connection.dispatcher.end();
 
-        return message.channel.send(":fast_forward: Skipped the song for you!");
+        await message.channel.send(":fast_forward: Skipped the song for you!");
+
+        if(serverQueue.songs.length <= 0)
+            client.timeOutforLeaving(guild);
     }
 })

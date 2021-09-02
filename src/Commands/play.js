@@ -36,7 +36,7 @@ module.exports = new Command({
             if (video)
                 song = { title: video.title, url: video.url };
             else
-                await message.channel.send(`There were no search results for '${videoQuery}'`);
+                return await message.channel.send(`There were no search results for '${videoQuery}'`);
         }
 
         if (!serverQueue || !serverQueue.connection.dispatcher) {
@@ -70,17 +70,12 @@ module.exports = new Command({
 const play = async(guild, song, message, client) => {
     const songQueue = client.queue.get(guild.id);
 
-    let eventForLeavingAfterTime;
-
     if (!song) {
-        eventForLeavingAfterTime = setTimeout(() => {
-            songQueue.voiceChannel.leave();
-            songQueue.delete(guild.id);
-        }, 10 * 1000 * 60);
+        await client.setLeaveTimeOut(guild);
         return;
     }
 
-    if(eventForLeavingAfterTime) clearTimeout(eventForLeavingAfterTime);
+    if(client.timeOutForLeaving) await client.destroyLeaveTimeOut()
 
     const stream = ytdl(song.url, { filter: 'audioonly' });
 

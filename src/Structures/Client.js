@@ -23,6 +23,9 @@ class Client extends Discord.Client {
         this.prefix = config.prefix;
 
         this.queue = new Map();
+
+        this.timeOutForLeaving = undefined;
+        this.timeOutforLeavingTime = 600000; // 10 mins
     }
 
     /**
@@ -68,6 +71,21 @@ class Client extends Discord.Client {
         data.prefix = newPrefix;
 
         fs.writeFileSync('./src/Data/config.json', JSON.stringify(data, null, 2));
+    }
+
+    async setLeaveTimeOut(guild, ms = this.timeOutforLeavingTime) {
+        const serverQueue = this.queue.get(guild.id);
+
+        this.timeOutForLeaving = setTimeout(() => {
+            serverQueue.voiceChannel.leave();
+            //problem:
+            //serverQueue.delete(guild.id);
+        }, ms);
+    }
+
+    async destroyLeaveTimeOut(){
+        clearTimeout(this.timeOutForLeaving);
+        this.timeOutForLeaving = undefined;
     }
 }
 

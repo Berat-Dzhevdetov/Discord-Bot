@@ -19,6 +19,7 @@ module.exports = new Command({
         if(serverQueue.connection.dispatcher)
             serverQueue.connection.dispatcher.destroy();
 
-        return message.channel.send("The queue was cleaned.");
+        await client.setLeaveTimeOut(guild);
+        return await message.channel.send("The queue was cleaned.");
     }
 })
