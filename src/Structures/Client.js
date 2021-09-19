@@ -79,7 +79,7 @@ class Client extends Discord.Client {
         this.timeOutForLeaving = setTimeout(() => {
             serverQueue.voiceChannel.leave();
             //problem:
-            //serverQueue.delete(guild.id);
+            serverQueue.delete(guild.id);
         }, ms);
     }
 
