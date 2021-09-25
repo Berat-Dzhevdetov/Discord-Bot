@@ -1,4 +1,5 @@
 const Command = require("../Structures/Command");
+const Discord = require('discord.js');
 
 module.exports = new Command({
     name: "clearmsg",
@@ -20,12 +21,13 @@ module.exports = new Command({
             const msg = await message.channel.send(`Cleared ${parsedAmmont} messages.`);
 
             setTimeout(() => {
-                msg.delete();
+                msg.delete()
+                .catch(err => err.code === Discord.Constants.APIErrors.UNKNOWN_MESSAGE ? undefined : console.error("Error coudn't delete alert clean msg"));
             }, 5000);
 
         } catch (error) {
-
             const msg = await message.channel.send(`I can delete only messages that are under 14 days old.`);
+
             setTimeout(() => {
                 msg.delete();
             }, 5000);
