@@ -16,6 +16,8 @@ module.exports = new Command({
         if (!serverQueue)
             return message.channel.send("There is nothing to skip!");
 
+        serverQueue.songs = [];
+
         if(serverQueue.connection.dispatcher)
             serverQueue.connection.dispatcher.destroy();
 

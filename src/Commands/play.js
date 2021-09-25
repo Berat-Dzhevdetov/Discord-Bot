@@ -1,5 +1,5 @@
 const Command = require("../Structures/Command");
-const ytdl = require('ytdl-core');
+const ytdl = require('discord-ytdl-core');
 const ytSearch = require('yt-search');
 const YouTube = require('simple-youtube-api');
 const { simpleYoutubeApiKey } = require('../Data/config.json');
@@ -58,7 +58,7 @@ module.exports = new Command({
 
                 message.channel.send(`Added ${songsInPlaylist.length - 1} more songs from the playlist to the queue! 😊`);
             } catch (error) {
-                await message.channel.send(error || "error");
+                console.log(error);
             }
         }
         else if (ytdl.validateURL(args[1])) {
@@ -95,7 +95,13 @@ const play = async (guild, song, message, client) => {
 
     if (client.timeOutForLeaving) await client.destroyLeaveTimeOut()
 
-    const stream = ytdl(song.url, { filter: 'audioonly' });
+    const stream = ytdl(song.url, {
+        filter: "audioonly",
+        opusEncoded: false,
+        fmt: "mp3",
+        quality: 'highest',
+        encoderArgs: ['-af', 'bass=g=15,dynaudnorm=f=420']
+    });
 
     songQueue.connection.play(stream, { seek: 0 })
         .on('finish', async () => {
