@@ -13,18 +13,19 @@ module.exports = new Command({
 
         let serverQueue = client.queue.get(guild.id);
 
-        if (!serverQueue)
+        if (!serverQueue || !serverQueue.connection || !serverQueue.connection.dispatcher)
             return message.channel.send("There is nothing in the queue!");
 
-        let queueAsText = "";
+        const serverName = message.guild.name;
+        let queueAsText = `Song queue for **${serverName}**:\n`;
 
-        queueAsText += `1. Now playing - **${serverQueue.songs[0].title}**\n`;
+        queueAsText += `  1. Now playing - **${serverQueue.songs[0].title}**\n`;
 
         for (let i = 1; i < serverQueue.songs.length; i++) {
             const song = serverQueue.songs[i];
-            queueAsText += `${i + 1}. ${song.title}\n`;
+            queueAsText += `  ${i + 1}. ${song.title}\n`;
         }
-        
+
         return message.channel.send(queueAsText);
     }
 })

@@ -28,6 +28,8 @@ module.exports = new Command({
 
                 const songsInPlaylist = await playlist.getVideos(25);
 
+                if(songsInPlaylist.length < 1) return await message.channel.send(`No songs in playlist: ${playlist.title}`);
+
                 let firstSongUrl = `https://www.youtube.com/watch?v=${songsInPlaylist[0].id}`;
 
                 let songInfo = await ytdl.getInfo(firstSongUrl);
@@ -100,7 +102,7 @@ const play = async (guild, song, message, client) => {
         opusEncoded: false,
         fmt: "mp3",
         quality: 'highest',
-        encoderArgs: ['-af', 'bass=g=15,dynaudnorm=f=420']
+        encoderArgs: ['-af', 'bass=g=10,dynaudnorm=f=420']
     });
 
     songQueue.connection.play(stream, { seek: 0 })
