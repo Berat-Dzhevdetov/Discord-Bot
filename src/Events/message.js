@@ -1,6 +1,8 @@
 const Event = require("../Structures/Event.js");
 
 module.exports = new Event("message", (client, message) => {
+    if (message.mentions.members.size >= 1 && message.mentions.users.filter(x => x.username == "RIP Groovy").size == 1)
+        return message.reply(`My prefix is: ${client.prefix}`);
     if (!message.content.startsWith(client.prefix)) return;
 
     const args = message.content.substring(client.prefix.length).split(/ +/);

@@ -15,6 +15,7 @@ module.exports = new Command({
         const parsedAmmont = parseInt(ammount);
 
         if (parsedAmmont > 100) return message.reply(`You cannot clear more than 100 messages at once.`);
+        else if (parsedAmmont <= 0) return message.reply(`Don't make strange thinks like that... they scare me.`);
 
         try {
             message.channel.bulkDelete(parsedAmmont);
